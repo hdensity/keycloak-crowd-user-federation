@@ -1,0 +1,171 @@
+/*
+ * Copyright © 2020 Sam Schmit
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the “Software”), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package it.schmit.keycloak.storage.crowd.group;
+
+import com.atlassian.crowd.model.group.Group;
+import org.keycloak.component.ComponentModel;
+import org.keycloak.models.ClientModel;
+import org.keycloak.models.GroupModel;
+import org.keycloak.models.RoleModel;
+import org.keycloak.storage.ReadOnlyException;
+import org.keycloak.storage.StorageId;
+
+import java.util.*;
+
+public class CrowdGroupAdapter implements GroupModel {
+
+    private final String id;
+    private final Group group;
+
+    private GroupModel parent;
+    private Set<GroupModel> subGroups = new HashSet<>();
+
+    public CrowdGroupAdapter(ComponentModel model, Group group) {
+        this.id = StorageId.keycloakId(model, group.getName());
+        this.group = group;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return group.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        throw new ReadOnlyException();
+    }
+
+    @Override
+    public void setSingleAttribute(String name, String value) {
+        throw new ReadOnlyException();
+    }
+
+    @Override
+    public void setAttribute(String name, List<String> values) {
+        throw new ReadOnlyException();
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        throw new ReadOnlyException();
+    }
+
+    @Override
+    public String getFirstAttribute(String name) {
+        return null;
+    }
+
+    @Override
+    public List<String> getAttribute(String name) {
+        return null;
+    }
+
+    @Override
+    public Map<String, List<String>> getAttributes() {
+        return null;
+    }
+
+    @Override
+    public GroupModel getParent() {
+        return parent;
+    }
+
+    @Override
+    public String getParentId() {
+        return parent != null ? parent.getId() : null;
+    }
+
+    @Override
+    public Set<GroupModel> getSubGroups() {
+        return subGroups;
+    }
+
+    @Override
+    public void setParent(GroupModel group) {
+        this.parent = group;
+    }
+
+    @Override
+    public void addChild(GroupModel subGroup) {
+        subGroups.add(subGroup);
+    }
+
+    @Override
+    public void removeChild(GroupModel subGroup) {
+        subGroups.remove(subGroup);
+    }
+
+    @Override
+    public Set<RoleModel> getRealmRoleMappings() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public Set<RoleModel> getClientRoleMappings(ClientModel app) {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public boolean hasRole(RoleModel role) {
+        return false;
+    }
+
+    @Override
+    public void grantRole(RoleModel role) {
+        throw new ReadOnlyException();
+    }
+
+    @Override
+    public Set<RoleModel> getRoleMappings() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public void deleteRoleMapping(RoleModel role) {
+        throw new ReadOnlyException();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof CrowdGroupAdapter)) {
+            return false;
+        }
+
+        CrowdGroupAdapter that = (CrowdGroupAdapter) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+}
