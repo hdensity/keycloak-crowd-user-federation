@@ -2,4 +2,4 @@ language: java
 sudo: false
 jdk:
   - openjdk8
-script: mvn clean test jacoco:report coveralls:report
+script: mvn clean package coveralls:report
