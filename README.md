@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/hdensity/keycloak-crowd-user-federation/badge.svg?branch=master)](https://coveralls.io/github/hdensity/keycloak-crowd-user-federation?branch=master)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/hdensity/keycloak-crowd-user-federation)](https://codeclimate.com/github/hdensity/keycloak-crowd-user-federation)
 [![Code Climate issues](https://img.shields.io/codeclimate/issues/hdensity/keycloak-crowd-user-federation)](https://codeclimate.com/github/hdensity/keycloak-crowd-user-federation/issues)
-[![Active](http://img.shields.io/badge/Status-Active-green.svg)](https://github.com/hdensity/keycloak-crowd-user-federation) 
+[![Active](http://img.shields.io/badge/Status-Active-green.svg)](https://github.com/hdensity/keycloak-crowd-user-federation)
 
 This library provides a [Keycloak](https://github.com/keycloak/keycloak) [user federation](https://www.keycloak.org/docs/latest/server_development/#_user-storage-spi) implementation for [Atlassian Crowd](https://www.atlassian.com/software/crowd), providing access to user's, their details and attributes, as well as crowd group memberships.
 
@@ -49,14 +49,16 @@ You need to have an application configured in Crowd, in order for Keycloak to ha
 To add the provider to your Keycloak realm(s), follow the official documentation [here](https://www.keycloak.org/docs/latest/server_admin/#adding-a-provider). After selecting the `crowd` provider from the list, the following configuration options are available:
 
 #### Required Settings
+
 * `Enabled`: whether to enable the provider
 * `Console Display Name`: display name of provider when linked in admin console
 * `Priority`: priority of provider when doing a user lookup (lowest first)
-* `Crowd URL`: the url to your crowd instance, e.g. http://host.docker.internal:8095/crowd
+* `Crowd URL`: the url to your crowd instance, e.g. `http://host.docker.internal:8095/crowd`
 * `Crowd Application Name`: the name of the application as configured in your crowd instance
 * `Crowd Application Password`: the password of the application as configured in your crowd instance.
 
 #### Cache Settings
+
 * `Cache Policy`: the cache policy for this provider
 
 # Development
@@ -88,12 +90,11 @@ The following interfaces will follow in the future:
 
 ## Todo
 
-- [x] Implement `UserLookupProvider`
-- [x] Implement `UserQueryProvider`
-- [x] Implement `CredentialInputValidator`
-
-- [ ] Add `EditMode.UNSYNCED` support (updates are stored locally)
-- [ ] Add `EditMode.WRITABLE` support (updates are stored in Crowd)
-- [ ] Add user import/synchronization support (users, groups and their respective attributes are copied to Keycloak)
-- [ ] Implement `CredentialInputUpdater` (allow updating credentials in Crowd)
-- [ ] Implement `UserRegistrationProvider` (allow creating and removing users in Crowd)
+* [x] Implement `UserLookupProvider`
+* [x] Implement `UserQueryProvider`
+* [x] Implement `CredentialInputValidator`
+* [ ] Add `EditMode.UNSYNCED` support (updates are stored locally)
+* [ ] Add `EditMode.WRITABLE` support (updates are stored in Crowd)
+* [ ] Add user import/synchronization support (users, groups and their respective attributes are copied to Keycloak)
+* [ ] Implement `CredentialInputUpdater` (allow updating credentials in Crowd)
+* [ ] Implement `UserRegistrationProvider` (allow creating and removing users in Crowd)

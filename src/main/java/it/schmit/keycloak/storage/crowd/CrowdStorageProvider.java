@@ -19,10 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package it.schmit.keycloak.storage.crowd;
 
 import com.atlassian.crowd.embedded.api.SearchRestriction;
-import com.atlassian.crowd.exception.*;
+import com.atlassian.crowd.exception.ApplicationPermissionException;
+import com.atlassian.crowd.exception.ExpiredCredentialException;
+import com.atlassian.crowd.exception.GroupNotFoundException;
+import com.atlassian.crowd.exception.InactiveAccountException;
+import com.atlassian.crowd.exception.InvalidAuthenticationException;
+import com.atlassian.crowd.exception.OperationFailedException;
+import com.atlassian.crowd.exception.UserNotFoundException;
 import com.atlassian.crowd.model.user.UserWithAttributes;
 import com.atlassian.crowd.search.query.entity.restriction.BooleanRestrictionImpl;
 import com.atlassian.crowd.search.query.entity.restriction.MatchMode;
@@ -154,15 +161,8 @@ public class CrowdStorageProvider implements
     }
 
     @Override
-    public List<UserModel> searchForUserByUserAttribute(String attrName, String attrValue, RealmModel realm) {
-        Map<String, String> params = new HashMap<>();
-        params.put(attrName, attrValue);
-
-        return searchForUser(params, realm, 0, Integer.MAX_VALUE);
-    }
-
-    @Override
-    public List<UserModel> searchForUser(Map<String, String> params, RealmModel realm, int firstResult, int maxResults) {
+    public List<UserModel> searchForUser(
+            Map<String, String> params, RealmModel realm, int firstResult, int maxResults) {
         SearchRestriction searchRestriction;
 
         if (params.isEmpty()) {
@@ -170,7 +170,9 @@ public class CrowdStorageProvider implements
         } else {
             List<SearchRestriction> termRestrictions = params.entrySet().stream()
                     .map(param -> new TermRestriction<>(
-                            new PropertyImpl<>(PARAM_MAP.getOrDefault(param.getKey(), param.getKey()), String.class), MatchMode.CONTAINS, param.getValue()))
+                            new PropertyImpl<>(PARAM_MAP.getOrDefault(param.getKey(), param.getKey()), String.class),
+                            MatchMode.CONTAINS,
+                            param.getValue()))
                     .collect(toList());
 
             searchRestriction = new BooleanRestrictionImpl(OR, termRestrictions);
@@ -185,6 +187,14 @@ public class CrowdStorageProvider implements
             logger.error(e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<UserModel> searchForUserByUserAttribute(String attrName, String attrValue, RealmModel realm) {
+        Map<String, String> params = new HashMap<>();
+        params.put(attrName, attrValue);
+
+        return searchForUser(params, realm, 0, Integer.MAX_VALUE);
     }
 
     @Override
@@ -228,7 +238,8 @@ public class CrowdStorageProvider implements
             return client.authenticateUser(user.getUsername(), input.getChallengeResponse()) != null;
         } catch (InactiveAccountException | UserNotFoundException e) {
             return false;
-        } catch (ApplicationPermissionException | InvalidAuthenticationException | OperationFailedException | ExpiredCredentialException e) {
+        } catch (ApplicationPermissionException | InvalidAuthenticationException
+                | OperationFailedException | ExpiredCredentialException e) {
             logger.error(e);
             throw new RuntimeException(e);
         }

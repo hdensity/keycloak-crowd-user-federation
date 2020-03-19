@@ -9,5 +9,10 @@ plugins:
     enabled: true
   markdownlint:
     enabled: true
+    checks:
+      MD013:
+        enabled: false
   checkstyle:
     enabled: true
+    config:
+      file: "checkstyle.xml"
