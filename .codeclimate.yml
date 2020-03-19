@@ -5,3 +5,9 @@ plugins:
       sonar.java.source: "8"
       tests_patterns:
         - src/test/**
+  fixme:
+    enabled: true
+  markdownlint:
+    enabled: true
+  checkstyle:
+    enabled: true
