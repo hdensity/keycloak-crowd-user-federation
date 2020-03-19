@@ -21,7 +21,7 @@
  */
 package it.schmit.keycloak.storage.crowd.group;
 
-import com.atlassian.crowd.model.group.Group;
+import com.atlassian.crowd.model.group.GroupWithAttributes;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,9 +37,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +48,7 @@ import static org.mockito.Mockito.when;
 class CrowdGroupAdapterTest {
 
     @Mock private ComponentModel modelMock;
-    @Mock private Group groupMock;
+    @Mock private GroupWithAttributes groupMock;
 
     private CrowdGroupAdapter crowdGroupAdapter;
 
@@ -97,18 +98,46 @@ class CrowdGroupAdapterTest {
     }
 
     @Test
-    void when_getFirstAttribute_then_nullIsReturned() {
+    void given_unknownAttribute_when_getFirstAttribute_then_expectedValueIsReturned() {
         assertThat(crowdGroupAdapter.getFirstAttribute("attr")).isNull();
     }
 
     @Test
-    void when_getAttribute_then_nullIsReturned() {
-        assertThat(crowdGroupAdapter.getAttribute("attr")).isNull();
+    void given_knownAttribute_when_getFirstAttribute_then_expectedValueIsReturned() {
+        when(groupMock.getValue("attr")).thenReturn("value");
+
+        assertThat(crowdGroupAdapter.getFirstAttribute("attr")).isEqualTo("value");
     }
 
     @Test
-    void when_getAttributes_then_nullIsReturned() {
-        assertThat(crowdGroupAdapter.getAttributes()).isNull();
+    void given_unknownAttribute_when_getAttribute_then_expectedValueIsReturned() {
+        when(groupMock.getValues("attr")).thenReturn(null);
+
+        assertThat(crowdGroupAdapter.getAttribute("attr")).isEmpty();
+    }
+
+    @Test
+    void given_knownAttribute_when_getAttribute_then_expectedValueIsReturned() {
+        Set<String> values = new HashSet<>();
+        values.add("value");
+
+        when(groupMock.getValues("attr")).thenReturn(values);
+
+        assertThat(crowdGroupAdapter.getAttribute("attr")).containsOnly("value");
+    }
+
+    @Test
+    void when_getAttributes_then_expectedValueIsReturned() {
+        Set<String> keys = new HashSet<>();
+        keys.add("attr");
+
+        Set<String> values = new HashSet<>();
+        values.add("value");
+
+        when(groupMock.getKeys()).thenReturn(keys);
+        when(groupMock.getValues("attr")).thenReturn(values);
+
+        assertThat(crowdGroupAdapter.getAttributes()).containsOnly(entry("attr", new ArrayList<>(values)));
     }
 
     @Test

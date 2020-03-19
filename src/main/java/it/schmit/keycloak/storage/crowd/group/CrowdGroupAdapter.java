@@ -21,7 +21,7 @@
  */
 package it.schmit.keycloak.storage.crowd.group;
 
-import com.atlassian.crowd.model.group.Group;
+import com.atlassian.crowd.model.group.GroupWithAttributes;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.GroupModel;
@@ -31,15 +31,17 @@ import org.keycloak.storage.StorageId;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.toMap;
+
 public class CrowdGroupAdapter implements GroupModel {
 
     private final String id;
-    private final Group group;
+    private final GroupWithAttributes group;
 
     private GroupModel parent;
     private Set<GroupModel> subGroups = new HashSet<>();
 
-    public CrowdGroupAdapter(ComponentModel model, Group group) {
+    public CrowdGroupAdapter(ComponentModel model, GroupWithAttributes group) {
         this.id = StorageId.keycloakId(model, group.getName());
         this.group = group;
     }
@@ -76,17 +78,19 @@ public class CrowdGroupAdapter implements GroupModel {
 
     @Override
     public String getFirstAttribute(String name) {
-        return null;
+        return group.getValue(name);
     }
 
     @Override
     public List<String> getAttribute(String name) {
-        return null;
+        Set<String> values = group.getValues(name);
+
+        return values != null ? new ArrayList<>(values) : Collections.emptyList();
     }
 
     @Override
     public Map<String, List<String>> getAttributes() {
-        return null;
+        return group.getKeys().stream().collect(toMap(key -> key, this::getAttribute));
     }
 
     @Override

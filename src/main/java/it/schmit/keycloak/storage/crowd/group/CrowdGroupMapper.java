@@ -22,12 +22,14 @@
 package it.schmit.keycloak.storage.crowd.group;
 
 import com.atlassian.crowd.exception.*;
+import com.atlassian.crowd.model.group.GroupWithAttributes;
 import com.atlassian.crowd.service.client.CrowdClient;
 import it.schmit.keycloak.storage.crowd.CrowdStorageProvider;
 import it.schmit.keycloak.storage.crowd.CrowdUserAdapter;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.GroupModel;
+import org.keycloak.storage.StorageId;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,7 +49,7 @@ public class CrowdGroupMapper {
     public CrowdUserAdapter onLoadUser(CrowdUserAdapter user) {
         try {
             Set<GroupModel> userGroups = client.getGroupsForUser(user.getUsername(), 0, Integer.MAX_VALUE).stream()
-                    .map(group -> new CrowdGroupAdapter(model, group))
+                    .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(group -> {
                         loadParent(group);
                         loadSubGroups(group);
@@ -65,9 +67,9 @@ public class CrowdGroupMapper {
 
     private void loadParent(CrowdGroupAdapter groupAdapter) {
         try {
-            client.getParentGroupsForGroup(groupAdapter.getId(), 0, 1)
+            client.getParentGroupsForGroup(StorageId.externalId(groupAdapter.getId()), 0, 1)
                     .stream()
-                    .map(group -> new CrowdGroupAdapter(model, group))
+                    .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(this::loadParent)
                     .forEach(groupAdapter::setParent);
         } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException | GroupNotFoundException e) {
@@ -78,8 +80,8 @@ public class CrowdGroupMapper {
 
     private void loadSubGroups(CrowdGroupAdapter groupAdapter) {
         try {
-            client.getChildGroupsOfGroup(groupAdapter.getId(), 0, Integer.MAX_VALUE).stream()
-                    .map(group -> new CrowdGroupAdapter(model, group))
+            client.getChildGroupsOfGroup(StorageId.externalId(groupAdapter.getId()), 0, Integer.MAX_VALUE).stream()
+                    .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(this::loadSubGroups)
                     .forEach(groupAdapter::addChild);
         } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException | GroupNotFoundException e) {
