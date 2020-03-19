@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package it.schmit.keycloak.storage.crowd.group;
 
 import com.atlassian.crowd.model.group.GroupWithAttributes;
@@ -29,7 +30,13 @@ import org.keycloak.models.RoleModel;
 import org.keycloak.storage.ReadOnlyException;
 import org.keycloak.storage.StorageId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toMap;
 

@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package it.schmit.keycloak.storage.crowd;
 
 import com.atlassian.crowd.model.user.UserWithAttributes;
@@ -31,7 +32,11 @@ import org.keycloak.storage.ReadOnlyException;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
@@ -42,7 +47,8 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     private Set<GroupModel> groups;
 
-    public CrowdUserAdapter(KeycloakSession session, RealmModel realm, ComponentModel model, UserWithAttributes entity) {
+    public CrowdUserAdapter(
+            KeycloakSession session, RealmModel realm, ComponentModel model, UserWithAttributes entity) {
         super(session, realm, model);
 
         this.keycloakId = StorageId.keycloakId(model, entity.getName());
