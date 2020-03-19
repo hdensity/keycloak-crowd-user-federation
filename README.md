@@ -1,7 +1,7 @@
 # Keycloak Crowd User Storage Library
 
 [![GitHub](https://img.shields.io/github/license/hdensity/keycloak-crowd-user-federation)](https://github.com/hdensity/keycloak-crowd-user-federation/blob/master/LICENSE)
-[![Travis (.org)](https://img.shields.io/travis/github/hdensity/keycloak-crowd-user-federation)](https://travis-ci.com/github/hdensity/keycloak-crowd-user-federation)
+[![Build Status](https://travis-ci.com/hdensity/keycloak-crowd-user-federation.svg?branch=master)](https://travis-ci.com/hdensity/keycloak-crowd-user-federation)
 [![Coverage Status](https://coveralls.io/repos/github/hdensity/keycloak-crowd-user-federation/badge.svg?branch=master)](https://coveralls.io/github/hdensity/keycloak-crowd-user-federation?branch=master)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/hdensity/keycloak-crowd-user-federation)](https://codeclimate.com/github/hdensity/keycloak-crowd-user-federation)
 [![Code Climate issues](https://img.shields.io/codeclimate/issues/hdensity/keycloak-crowd-user-federation)](https://codeclimate.com/github/hdensity/keycloak-crowd-user-federation/issues)
