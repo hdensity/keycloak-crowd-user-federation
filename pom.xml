@@ -217,7 +217,7 @@
         <artifactId>coveralls-maven-plugin</artifactId>
         <version>4.3.0</version>
         <configuration>
-          <jacocoReports>${jacoco.reportPath}</jacocoReports>
+          <jacocoReports>${project.basedir}/target/site/jacoco/jacoco.xml</jacocoReports>
         </configuration>
       </plugin>
 
