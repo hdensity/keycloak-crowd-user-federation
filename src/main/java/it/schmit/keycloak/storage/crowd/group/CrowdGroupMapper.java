@@ -19,9 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package it.schmit.keycloak.storage.crowd.group;
 
-import com.atlassian.crowd.exception.*;
+import com.atlassian.crowd.exception.ApplicationPermissionException;
+import com.atlassian.crowd.exception.GroupNotFoundException;
+import com.atlassian.crowd.exception.InvalidAuthenticationException;
+import com.atlassian.crowd.exception.OperationFailedException;
+import com.atlassian.crowd.exception.UserNotFoundException;
 import com.atlassian.crowd.model.group.GroupWithAttributes;
 import com.atlassian.crowd.service.client.CrowdClient;
 import it.schmit.keycloak.storage.crowd.CrowdStorageProvider;
@@ -59,7 +64,8 @@ public class CrowdGroupMapper {
             user.setGroupsInternal(userGroups);
 
             return user;
-        } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException | UserNotFoundException e) {
+        } catch (OperationFailedException | InvalidAuthenticationException
+                | ApplicationPermissionException | UserNotFoundException e) {
             logger.error(e);
             throw new RuntimeException(e);
         }
@@ -72,7 +78,8 @@ public class CrowdGroupMapper {
                     .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(this::loadParent)
                     .forEach(groupAdapter::setParent);
-        } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException | GroupNotFoundException e) {
+        } catch (OperationFailedException | InvalidAuthenticationException
+                | ApplicationPermissionException | GroupNotFoundException e) {
             logger.error(e);
             throw new RuntimeException(e);
         }
@@ -84,7 +91,8 @@ public class CrowdGroupMapper {
                     .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(this::loadSubGroups)
                     .forEach(groupAdapter::addChild);
-        } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException | GroupNotFoundException e) {
+        } catch (OperationFailedException | InvalidAuthenticationException
+                | ApplicationPermissionException | GroupNotFoundException e) {
             logger.error(e);
             throw new RuntimeException(e);
         }
