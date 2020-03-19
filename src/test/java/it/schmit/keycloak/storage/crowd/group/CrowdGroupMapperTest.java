@@ -21,12 +21,209 @@
  */
 package it.schmit.keycloak.storage.crowd.group;
 
+import com.atlassian.crowd.exception.*;
+import com.atlassian.crowd.model.group.Group;
+import com.atlassian.crowd.model.group.GroupWithAttributes;
+import com.atlassian.crowd.service.client.CrowdClient;
+import it.schmit.keycloak.storage.crowd.CrowdUserAdapter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.keycloak.component.ComponentModel;
+import org.keycloak.models.GroupModel;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CrowdGroupMapperTest {
 
+    @Mock private ComponentModel modelMock;
+    @Mock private CrowdClient clientMock;
 
+    @InjectMocks
+    private CrowdGroupMapper crowdGroupMapper;
+
+    private static final String USERNAME = "username";
+    @Mock private CrowdUserAdapter crowdUserAdapterMock;
+    @Captor private ArgumentCaptor<Set<GroupModel>> groupModelArgumentCaptor;
+
+    @BeforeEach
+    void setup() {
+        when(crowdUserAdapterMock.getUsername()).thenReturn(USERNAME);
+    }
+
+    @Test
+    void when_onLoadUser_then_expectedGroupsAreRetrieved() throws Exception {
+        // user groups
+        GroupWithAttributes singleGroupMock = createGroupMockWithName("singleGroupMock");
+        GroupWithAttributes groupWithParentsMock = createGroupMockWithName("groupWithParentsMock");
+        GroupWithAttributes groupWithChildrenMock = createGroupMockWithName("groupWithChildrenMock");
+
+        List<Group> userGroups = new ArrayList<>();
+        userGroups.add(singleGroupMock);
+        userGroups.add(groupWithParentsMock);
+        userGroups.add(groupWithChildrenMock);
+
+        when(clientMock.getGroupsForUser(USERNAME, 0, Integer.MAX_VALUE)).thenReturn(userGroups);
+        when(clientMock.getParentGroupsForGroup("singleGroupMock", 0, 1))
+                .thenReturn(Collections.emptyList());
+        when(clientMock.getChildGroupsOfGroup("singleGroupMock", 0, Integer.MAX_VALUE))
+                .thenReturn(Collections.emptyList());
+        when(clientMock.getChildGroupsOfGroup("groupWithParentsMock", 0, Integer.MAX_VALUE))
+                .thenReturn(Collections.emptyList());
+
+        // parent groups
+        GroupWithAttributes parentGroupMock = createGroupMockWithName("parentGroupMock");
+        GroupWithAttributes grandParentGroupMock = createGroupMockWithName("grandParentGroupMock");
+
+        List<Group> parentGroups = new ArrayList<>();
+        parentGroups.add(parentGroupMock);
+        List<Group> grandParentGroups = new ArrayList<>();
+        grandParentGroups.add(grandParentGroupMock);
+
+        when(clientMock.getParentGroupsForGroup("groupWithParentsMock", 0, 1)).thenReturn(parentGroups);
+        when(clientMock.getParentGroupsForGroup("parentGroupMock", 0, 1)).thenReturn(grandParentGroups);
+
+        // child groups
+        GroupWithAttributes firstChildGroupMock = createGroupMockWithName("firstChildGroupMock");
+        GroupWithAttributes secondChildGroupMock = createGroupMockWithName("secondChildGroupMock");
+        GroupWithAttributes grandChildGroupMock = createGroupMockWithName("grandChildGroupMock");
+
+        List<Group> childGroups = new ArrayList<>();
+        childGroups.add(firstChildGroupMock);
+        childGroups.add(secondChildGroupMock);
+        List<Group> grandChildGroups = new ArrayList<>();
+        grandChildGroups.add(grandChildGroupMock);
+
+        when(clientMock.getChildGroupsOfGroup("groupWithChildrenMock", 0, Integer.MAX_VALUE)).thenReturn(childGroups);
+        when(clientMock.getChildGroupsOfGroup("firstChildGroupMock", 0, Integer.MAX_VALUE)).thenReturn(grandChildGroups);
+
+        // THEN
+        crowdGroupMapper.onLoadUser(crowdUserAdapterMock);
+
+        // WHEN
+        verify(crowdUserAdapterMock).setGroupsInternal(groupModelArgumentCaptor.capture());
+
+        Set<CrowdGroupAdapter> expectedGroups = new HashSet<>();
+        expectedGroups.add(new CrowdGroupAdapter(modelMock, singleGroupMock));
+        expectedGroups.add(new CrowdGroupAdapter(modelMock, groupWithParentsMock));
+        expectedGroups.add(new CrowdGroupAdapter(modelMock, groupWithChildrenMock));
+
+        // TODO incomplete
+        assertThat(groupModelArgumentCaptor.getValue()).containsExactlyElementsOf(expectedGroups);
+    }
+
+    private GroupWithAttributes createGroupMockWithName(String name) {
+        GroupWithAttributes groupMock = mock(GroupWithAttributes.class);
+        when(groupMock.getName()).thenReturn(name);
+
+        return groupMock;
+    }
+
+    @Test
+    void given_getGroupsForUserThrowsOperationFailedException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetGroupsForUserExceptionTest(new OperationFailedException());
+    }
+
+    @Test
+    void given_getGroupsForUserThrowsInvalidAuthenticationException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetGroupsForUserExceptionTest(new InvalidAuthenticationException("Boom!"));
+    }
+
+    @Test
+    void given_getGroupsForUserThrowsApplicationPermissionException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetGroupsForUserExceptionTest(new ApplicationPermissionException());
+    }
+
+    @Test
+    void given_getGroupsForUserThrowsUserNotFoundException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetGroupsForUserExceptionTest(new UserNotFoundException("Boom!"));
+    }
+
+    private void runGetGroupsForUserExceptionTest(Exception exception) throws Exception {
+        when(clientMock.getGroupsForUser(USERNAME, 0, Integer.MAX_VALUE)).thenThrow(exception);
+
+        assertThatThrownBy(() -> crowdGroupMapper.onLoadUser(crowdUserAdapterMock))
+                .isExactlyInstanceOf(RuntimeException.class)
+                .hasCause(exception);
+    }
+
+    @Test
+    void given_getParentGroupsForGroupThrowsOperationFailedException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetParentGroupsForGroupExceptionTest(new OperationFailedException());
+    }
+
+    @Test
+    void given_getParentGroupsForGroupThrowsInvalidAuthenticationException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetParentGroupsForGroupExceptionTest(new InvalidAuthenticationException("Boom!"));
+    }
+
+    @Test
+    void given_getParentGroupsForGroupThrowsApplicationPermissionException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetParentGroupsForGroupExceptionTest(new ApplicationPermissionException());
+    }
+
+    @Test
+    void given_getParentGroupsForGroupThrowsGroupNotFoundException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetParentGroupsForGroupExceptionTest(new GroupNotFoundException("Boom!"));
+    }
+
+    private void runGetParentGroupsForGroupExceptionTest(Exception exception) throws Exception {
+        GroupWithAttributes groupMock = createGroupMockWithName("groupMock");
+
+        List<Group> userGroups = new ArrayList<>();
+        userGroups.add(groupMock);
+        when(clientMock.getGroupsForUser(USERNAME, 0, Integer.MAX_VALUE)).thenReturn(userGroups);
+
+        when(clientMock.getParentGroupsForGroup("groupMock", 0, 1)).thenThrow(exception);
+
+        assertThatThrownBy(() -> crowdGroupMapper.onLoadUser(crowdUserAdapterMock))
+                .isExactlyInstanceOf(RuntimeException.class)
+                .hasCause(exception);
+    }
+
+    @Test
+    void given_getChildGroupsOfGroupThrowsOperationFailedException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetChildGroupsOfGroupExceptionTest(new OperationFailedException());
+    }
+
+    @Test
+    void given_getChildGroupsOfGroupThrowsInvalidAuthenticationException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetChildGroupsOfGroupExceptionTest(new InvalidAuthenticationException("Boom!"));
+    }
+
+    @Test
+    void given_getChildGroupsOfGroupThrowsApplicationPermissionException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetChildGroupsOfGroupExceptionTest(new ApplicationPermissionException());
+    }
+
+    @Test
+    void given_getChildGroupsOfGroupThrowsGroupNotFoundException_when_onLoadUser_thenExceptionIsThrown() throws Exception {
+        runGetChildGroupsOfGroupExceptionTest(new GroupNotFoundException("Boom!"));
+    }
+
+    private void runGetChildGroupsOfGroupExceptionTest(Exception exception) throws Exception {
+        GroupWithAttributes groupMock = createGroupMockWithName("groupMock");
+
+        List<Group> userGroups = new ArrayList<>();
+        userGroups.add(groupMock);
+        when(clientMock.getGroupsForUser(USERNAME, 0, Integer.MAX_VALUE)).thenReturn(userGroups);
+
+        when(clientMock.getParentGroupsForGroup("groupMock", 0, 1)).thenReturn(Collections.emptyList());
+        when(clientMock.getChildGroupsOfGroup("groupMock", 0, Integer.MAX_VALUE)).thenThrow(exception);
+
+        assertThatThrownBy(() -> crowdGroupMapper.onLoadUser(crowdUserAdapterMock))
+                .isExactlyInstanceOf(RuntimeException.class)
+                .hasCause(exception);
+    }
 
 }
