@@ -115,13 +115,29 @@ class CrowdGroupMapperTest {
         // WHEN
         verify(crowdUserAdapterMock).setGroupsInternal(groupModelArgumentCaptor.capture());
 
+        // verify
         Set<CrowdGroupAdapter> expectedGroups = new HashSet<>();
         expectedGroups.add(new CrowdGroupAdapter(modelMock, singleGroupMock));
-        expectedGroups.add(new CrowdGroupAdapter(modelMock, groupWithParentsMock));
-        expectedGroups.add(new CrowdGroupAdapter(modelMock, groupWithChildrenMock));
 
-        // TODO incomplete
-        assertThat(groupModelArgumentCaptor.getValue()).containsExactlyElementsOf(expectedGroups);
+        CrowdGroupAdapter groupWithParentsAdapter = new CrowdGroupAdapter(modelMock, groupWithParentsMock);
+        CrowdGroupAdapter parentAdapter = new CrowdGroupAdapter(modelMock, parentGroupMock);
+        CrowdGroupAdapter grandparentAdapter = new CrowdGroupAdapter(modelMock, grandParentGroupMock);
+        groupWithParentsAdapter.setParent(parentAdapter);
+        parentAdapter.setParent(grandparentAdapter);
+
+        expectedGroups.add(groupWithParentsAdapter);
+
+        CrowdGroupAdapter groupWithChildrenAdapter = new CrowdGroupAdapter(modelMock, groupWithChildrenMock);
+        CrowdGroupAdapter firstChildAdapter = new CrowdGroupAdapter(modelMock, firstChildGroupMock);
+        CrowdGroupAdapter secondChildAdapter = new CrowdGroupAdapter(modelMock, secondChildGroupMock);
+        CrowdGroupAdapter grandchildAdapter = new CrowdGroupAdapter(modelMock, grandChildGroupMock);
+        groupWithChildrenAdapter.addChild(firstChildAdapter);
+        groupWithChildrenAdapter.addChild(secondChildAdapter);
+        firstChildAdapter.addChild(grandchildAdapter);
+
+        expectedGroups.add(groupWithChildrenAdapter);
+
+        assertThat(groupModelArgumentCaptor.getValue()).containsExactlyInAnyOrderElementsOf(expectedGroups);
     }
 
     private GroupWithAttributes createGroupMockWithName(String name) {
