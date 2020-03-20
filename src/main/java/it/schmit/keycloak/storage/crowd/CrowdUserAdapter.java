@@ -38,6 +38,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A read-only UserModel implementation for Crowd's UserWithAttributes.
+ *
+ * @author Sam Schmit
+ * @since 1.0.0
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/storage/adapter/AbstractUserAdapterFederatedStorage.html">org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage</a>
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/models/UserModel.html">org.keycloak.models.UserModel</a>
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/models/RoleMapperModel.html">org.keycloak.models.RoleMapperModel</a>
+ * @see <a href="https://docs.atlassian.com/atlassian-crowd/4.0.0/com/atlassian/crowd/model/user/UserWithAttributes.html">com.atlassian.crowd.model.user.UserWithAttributes</a>
+ */
 public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     public static final String ATTR_DISPLAY_NAME = "displayName";
@@ -47,6 +57,14 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     private Set<GroupModel> groups;
 
+    /**
+     * Creates a new instance of this adapter.
+     *
+     * @param session the keycloak session
+     * @param realm the realm model
+     * @param model the provider's component model
+     * @param entity the crowd user entity
+     */
     public CrowdUserAdapter(
             KeycloakSession session, RealmModel realm, ComponentModel model, UserWithAttributes entity) {
         super(session, realm, model);

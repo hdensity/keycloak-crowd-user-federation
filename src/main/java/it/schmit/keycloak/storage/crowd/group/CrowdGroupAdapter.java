@@ -40,6 +40,15 @@ import java.util.Set;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * A read-only GroupModel implementation for Crowd's GroupWithAttributes.
+ *
+ * @author Sam Schmit
+ * @since 1.0.0
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/models/GroupModel.html">org.keycloak.models.GroupModel</a>
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/models/RoleMapperModel.html">org.keycloak.models.RoleMapperModel</a>
+ * @see <a href="https://docs.atlassian.com/atlassian-crowd/4.0.0/com/atlassian/crowd/model/group/GroupWithAttributes.html">com.atlassian.crowd.model.group.GroupWithAttributes</a>
+ */
 public class CrowdGroupAdapter implements GroupModel {
 
     private final String id;
