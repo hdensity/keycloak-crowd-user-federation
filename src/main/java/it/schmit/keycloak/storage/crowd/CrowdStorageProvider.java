@@ -43,6 +43,7 @@ import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputValidator;
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.ModelException;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.PasswordCredentialModel;
@@ -116,7 +117,7 @@ public class CrowdStorageProvider implements
             return null;
         } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
@@ -142,7 +143,7 @@ public class CrowdStorageProvider implements
             return client.searchUserNames(NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE).size();
         } catch (OperationFailedException | InvalidAuthenticationException | ApplicationPermissionException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
@@ -202,7 +203,7 @@ public class CrowdStorageProvider implements
                     .collect(toList());
         } catch (InvalidAuthenticationException | OperationFailedException | ApplicationPermissionException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
@@ -229,7 +230,7 @@ public class CrowdStorageProvider implements
             return Collections.emptyList();
         } catch (ApplicationPermissionException | InvalidAuthenticationException | OperationFailedException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
@@ -258,7 +259,7 @@ public class CrowdStorageProvider implements
         } catch (ApplicationPermissionException | InvalidAuthenticationException
                 | OperationFailedException | ExpiredCredentialException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 

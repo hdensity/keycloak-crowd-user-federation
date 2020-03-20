@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package it.schmit.keycloak.storage.crowd;
 
 import org.junit.jupiter.api.extension.ExtendWith;
