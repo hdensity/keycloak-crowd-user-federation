@@ -61,13 +61,13 @@ To add the provider to your Keycloak realm(s), follow the official documentation
 
 * `Cache Policy`: the cache policy for this provider
 
-# Development
+## Development
 
-## System Requirements
+### System Requirements
 
 The Crowd User Storage Library is developed using Java 8 (Java SDK 1.8) and Maven (Maven 3.5+).
 
-## Building
+### Building
 
 To build this provider run the following maven command:
 
@@ -75,7 +75,7 @@ To build this provider run the following maven command:
 mvn clean package
 ```
 
-## Implemented [capability interfaces](https://www.keycloak.org/docs/latest/server_development/#provider-capability-interfaces)
+### Implemented [capability interfaces](https://www.keycloak.org/docs/latest/server_development/#provider-capability-interfaces)
 
 The following interfaces have been implemented:
 
@@ -88,7 +88,7 @@ The following interfaces will follow in the future:
 * `CredentialInputUpdater`: credential type and update handling
 * `UserRegistrationProvider`: adding and removing users
 
-## Todo
+### Todo
 
 * [x] Implement `UserLookupProvider`
 * [x] Implement `UserQueryProvider`
