@@ -78,7 +78,7 @@ public class CrowdStorageProvider implements
 
     private static final Logger logger = Logger.getLogger(CrowdStorageProvider.class);
 
-    private static final TermRestriction<String> NOOP_SEARCH_RESTRICTION =
+    protected static final TermRestriction<String> NOOP_SEARCH_RESTRICTION =
             new TermRestriction<>(new PropertyImpl<>("name", String.class), MatchMode.CONTAINS, "");
 
     private static final Map<String, String> PARAM_MAP;
@@ -131,8 +131,7 @@ public class CrowdStorageProvider implements
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
 
-        return searchForUser(params, realm, 0, 1)
-                .stream().findFirst().orElse(null);
+        return searchForUser(params, realm, 0, 1).stream().findFirst().orElse(null);
     }
 
     // UserQueryProvider methods
@@ -254,10 +253,9 @@ public class CrowdStorageProvider implements
 
         try {
             return client.authenticateUser(user.getUsername(), input.getChallengeResponse()) != null;
-        } catch (InactiveAccountException | UserNotFoundException e) {
+        } catch (InactiveAccountException | UserNotFoundException | ExpiredCredentialException e) {
             return false;
-        } catch (ApplicationPermissionException | InvalidAuthenticationException
-                | OperationFailedException | ExpiredCredentialException e) {
+        } catch (ApplicationPermissionException | InvalidAuthenticationException | OperationFailedException e) {
             logger.error(e);
             throw new ModelException(e);
         }
