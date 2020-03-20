@@ -233,8 +233,9 @@ class CrowdGroupAdapterTest {
     @Test
     void equalsAndHashcode() {
         EqualsVerifier.forClass(CrowdGroupAdapter.class)
-                .suppress(Warning.STRICT_INHERITANCE)
-                .withOnlyTheseFields("id")
+                .suppress(Warning.STRICT_INHERITANCE, Warning.NONFINAL_FIELDS)
+                .usingGetClass()
+                .withIgnoredFields("group")
                 .verify();
     }
 

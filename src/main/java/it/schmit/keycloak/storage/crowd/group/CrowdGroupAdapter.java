@@ -171,21 +171,16 @@ public class CrowdGroupAdapter implements GroupModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof CrowdGroupAdapter)) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         CrowdGroupAdapter that = (CrowdGroupAdapter) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(parent, that.parent) &&
+                Objects.equals(subGroups, that.subGroups);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, parent, subGroups);
     }
-
 }
