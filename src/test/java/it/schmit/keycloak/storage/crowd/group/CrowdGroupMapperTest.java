@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package it.schmit.keycloak.storage.crowd.group;
 
 import com.atlassian.crowd.exception.*;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.GroupModel;
+import org.keycloak.models.ModelException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -153,7 +155,7 @@ class CrowdGroupMapperTest {
         when(clientMock.getGroupsForUser(USERNAME, 0, Integer.MAX_VALUE)).thenThrow(exception);
 
         assertThatThrownBy(() -> crowdGroupMapper.onLoadUser(crowdUserAdapterMock))
-                .isExactlyInstanceOf(RuntimeException.class)
+                .isExactlyInstanceOf(ModelException.class)
                 .hasCause(exception);
     }
 
@@ -187,7 +189,7 @@ class CrowdGroupMapperTest {
         when(clientMock.getParentGroupsForGroup("groupMock", 0, 1)).thenThrow(exception);
 
         assertThatThrownBy(() -> crowdGroupMapper.onLoadUser(crowdUserAdapterMock))
-                .isExactlyInstanceOf(RuntimeException.class)
+                .isExactlyInstanceOf(ModelException.class)
                 .hasCause(exception);
     }
 
@@ -222,7 +224,7 @@ class CrowdGroupMapperTest {
         when(clientMock.getChildGroupsOfGroup("groupMock", 0, Integer.MAX_VALUE)).thenThrow(exception);
 
         assertThatThrownBy(() -> crowdGroupMapper.onLoadUser(crowdUserAdapterMock))
-                .isExactlyInstanceOf(RuntimeException.class)
+                .isExactlyInstanceOf(ModelException.class)
                 .hasCause(exception);
     }
 

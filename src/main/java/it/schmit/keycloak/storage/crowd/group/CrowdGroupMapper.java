@@ -34,6 +34,7 @@ import it.schmit.keycloak.storage.crowd.CrowdUserAdapter;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.GroupModel;
+import org.keycloak.models.ModelException;
 import org.keycloak.storage.StorageId;
 
 import java.util.Set;
@@ -85,7 +86,7 @@ public class CrowdGroupMapper {
         } catch (OperationFailedException | InvalidAuthenticationException
                 | ApplicationPermissionException | UserNotFoundException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
@@ -99,7 +100,7 @@ public class CrowdGroupMapper {
         } catch (OperationFailedException | InvalidAuthenticationException
                 | ApplicationPermissionException | GroupNotFoundException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
@@ -112,7 +113,7 @@ public class CrowdGroupMapper {
         } catch (OperationFailedException | InvalidAuthenticationException
                 | ApplicationPermissionException | GroupNotFoundException e) {
             logger.error(e);
-            throw new RuntimeException(e);
+            throw new ModelException(e);
         }
     }
 
