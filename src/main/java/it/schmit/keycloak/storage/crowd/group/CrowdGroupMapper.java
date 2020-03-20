@@ -39,6 +39,12 @@ import org.keycloak.storage.StorageId;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * A mapper used to resolve a user's groups, retrieving them, as well as their respective parents and children.
+ *
+ * @author Sam Schmit
+ * @since 1.0.0
+ */
 public class CrowdGroupMapper {
 
     private static final Logger logger = Logger.getLogger(CrowdStorageProvider.class);
@@ -46,11 +52,23 @@ public class CrowdGroupMapper {
     private final ComponentModel model;
     private final CrowdClient client;
 
+    /**
+     * Create's a new instance of this mapper.
+     *
+     * @param model this provider's component model
+     * @param client the crowd rest client
+     */
     public CrowdGroupMapper(ComponentModel model, CrowdClient client) {
         this.model = model;
         this.client = client;
     }
 
+    /**
+     * Retrieves the provided user's groups and resolves their respective parents and children.
+     *
+     * @param user The user for which to resolve groups
+     * @return The provided user with it's groups set
+     */
     public CrowdUserAdapter onLoadUser(CrowdUserAdapter user) {
         try {
             Set<GroupModel> userGroups = client.getGroupsForUser(user.getUsername(), 0, Integer.MAX_VALUE).stream()
