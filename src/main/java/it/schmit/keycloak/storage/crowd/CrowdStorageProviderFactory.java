@@ -34,6 +34,14 @@ import org.keycloak.storage.UserStorageProviderFactory;
 
 import java.util.List;
 
+/**
+ * Factory implementation to manage the configuration and creation of the {@link CrowdStorageProvider}.
+ *
+ * @author Sam Schmit
+ * @since 1.0.0
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/storage/UserStorageProviderFactory.html">org.keycloak.storage.UserStorageProviderFactory</a>
+ * @see CrowdStorageProvider
+ */
 public class CrowdStorageProviderFactory implements UserStorageProviderFactory<CrowdStorageProvider> {
 
     private static final String PROVIDER_NAME = "crowd";

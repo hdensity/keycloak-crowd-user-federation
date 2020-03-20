@@ -59,6 +59,16 @@ import java.util.Map;
 import static com.atlassian.crowd.search.query.entity.restriction.BooleanRestriction.BooleanLogic.OR;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * UserStorageProvider implementation providing read-only user federation to an Atlassian Crowd deployment.
+ *
+ * @author Sam Schmit
+ * @since 1.0.0
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/storage/UserStorageProvider.html">org.keycloak.storage.UserStorageProvider</a>
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/storage/user/UserLookupProvider.html">org.keycloak.storage.user.UserLookupProvider</a>
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/storage/user/UserQueryProvider.html">org.keycloak.storage.user.UserQueryProvider</a>
+ * @see <a href="https://www.keycloak.org/docs-api/9.0/javadocs/org/keycloak/credential/CredentialInputValidator.html">org.keycloak.credential.CredentialInputValidator</a>
+ */
 public class CrowdStorageProvider implements
         UserStorageProvider,
         UserLookupProvider,
@@ -83,6 +93,13 @@ public class CrowdStorageProvider implements
     private CrowdClient client;
     private ComponentModel model;
 
+    /**
+     * Creates a new instance of this provider.
+     *
+     * @param session the Keycloak session
+     * @param model the provider's component model
+     * @param client the crowd rest client
+     */
     public CrowdStorageProvider(KeycloakSession session, ComponentModel model, CrowdClient client) {
         this.session = session;
         this.model = model;
