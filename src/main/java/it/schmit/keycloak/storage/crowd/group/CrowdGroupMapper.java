@@ -83,8 +83,8 @@ public class CrowdGroupMapper {
             user.setGroupsInternal(userGroups);
 
             return user;
-        } catch (OperationFailedException | InvalidAuthenticationException
-                | ApplicationPermissionException | UserNotFoundException e) {
+        } catch (OperationFailedException | InvalidAuthenticationException |
+                ApplicationPermissionException | UserNotFoundException e) {
             logger.error(e);
             throw new ModelException(e);
         }
@@ -97,8 +97,8 @@ public class CrowdGroupMapper {
                     .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(this::loadParent)
                     .forEach(groupAdapter::setParent);
-        } catch (OperationFailedException | InvalidAuthenticationException
-                | ApplicationPermissionException | GroupNotFoundException e) {
+        } catch (OperationFailedException | InvalidAuthenticationException |
+                ApplicationPermissionException | GroupNotFoundException e) {
             logger.error(e);
             throw new ModelException(e);
         }
@@ -110,8 +110,8 @@ public class CrowdGroupMapper {
                     .map(group -> new CrowdGroupAdapter(model, (GroupWithAttributes) group))
                     .peek(this::loadSubGroups)
                     .forEach(groupAdapter::addChild);
-        } catch (OperationFailedException | InvalidAuthenticationException
-                | ApplicationPermissionException | GroupNotFoundException e) {
+        } catch (OperationFailedException | InvalidAuthenticationException |
+                ApplicationPermissionException | GroupNotFoundException e) {
             logger.error(e);
             throw new ModelException(e);
         }
