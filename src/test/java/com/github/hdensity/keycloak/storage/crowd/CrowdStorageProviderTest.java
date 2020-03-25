@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package it.schmit.keycloak.storage.crowd;
+package com.github.hdensity.keycloak.storage.crowd;
 
 import com.atlassian.crowd.embedded.api.SearchRestriction;
 import com.atlassian.crowd.exception.ApplicationPermissionException;
@@ -59,7 +59,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.atlassian.crowd.search.query.entity.restriction.BooleanRestriction.BooleanLogic.OR;
-import static it.schmit.keycloak.storage.crowd.CrowdStorageProvider.NOOP_SEARCH_RESTRICTION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
@@ -156,7 +155,7 @@ class CrowdStorageProviderTest {
         expectedResult.add("user1");
         expectedResult.add("user2");
 
-        when(clientMock.searchUserNames(NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE)).thenReturn(expectedResult);
+        when(clientMock.searchUserNames(CrowdStorageProvider.NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE)).thenReturn(expectedResult);
 
         assertThat(crowdStorageProvider.getUsersCount(realmModelMock)).isEqualTo(2);
     }
@@ -177,7 +176,7 @@ class CrowdStorageProviderTest {
     }
 
     private void runGetUsersCountExceptionTest(Exception exception) throws Exception {
-        when(clientMock.searchUserNames(NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE)).thenThrow(exception);
+        when(clientMock.searchUserNames(CrowdStorageProvider.NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE)).thenThrow(exception);
 
         assertThatThrownBy(() -> crowdStorageProvider.getUsersCount(realmModelMock))
                 .isExactlyInstanceOf(ModelException.class)
@@ -234,7 +233,7 @@ class CrowdStorageProviderTest {
         List<UserWithAttributes> users = new ArrayList<>();
         users.add(userMock);
 
-        when(clientMock.searchUsersWithAttributes(NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE))
+        when(clientMock.searchUsersWithAttributes(CrowdStorageProvider.NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE))
                 .thenReturn(users);
 
         assertThat(crowdStorageProvider.searchForUser(new HashMap<>(), realmModelMock, 0, Integer.MAX_VALUE))
@@ -292,7 +291,7 @@ class CrowdStorageProviderTest {
     }
 
     private void runSearchForUserExceptionTest(Exception exception) throws Exception {
-        when(clientMock.searchUsersWithAttributes(NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE))
+        when(clientMock.searchUsersWithAttributes(CrowdStorageProvider.NOOP_SEARCH_RESTRICTION, 0, Integer.MAX_VALUE))
                 .thenThrow(exception);
 
         assertThatThrownBy(() -> crowdStorageProvider.searchForUser(
