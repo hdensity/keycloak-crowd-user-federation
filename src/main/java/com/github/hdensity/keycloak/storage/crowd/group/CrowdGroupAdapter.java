@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package it.schmit.keycloak.storage.crowd.group;
+package com.github.hdensity.keycloak.storage.crowd.group;
 
 import com.atlassian.crowd.model.group.GroupWithAttributes;
 import org.keycloak.component.ComponentModel;
