@@ -47,17 +47,23 @@
 
     <jacoco.reportPath>${project.basedir}/target/jacoco/jacoco.exec</jacoco.reportPath>
 
-    <version.keycloak>9.0.0</version.keycloak>
+    <version.keycloak>9.0.2</version.keycloak>
     <version.jboss.logging>3.4.1.Final</version.jboss.logging>
     <version.crowd.client>4.0.1</version.crowd.client>
+    <version.commons.logging>1.2</version.commons.logging>
+    <version.jaxb.api>2.3.1</version.jaxb.api>
 
     <version.junit>5.6.0</version.junit>
     <version.mockito>3.3.0</version.mockito>
     <version.assertj>3.15.0</version.assertj>
+    <version.equalsverifier>3.1.13</version.equalsverifier>
+
     <version.jacoco>0.8.5</version.jacoco>
 
     <version.maven.compiler.plugin>3.5.1</version.maven.compiler.plugin>
+    <version.maven.surefire.plugin>2.22.2</version.maven.surefire.plugin>
     <version.maven.shade.plugin>2.3</version.maven.shade.plugin>
+    <version.coveralls.plugin>4.3.0</version.coveralls.plugin>
   </properties>
 
   <dependencyManagement>
@@ -109,13 +115,13 @@
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.2</version>
+      <version>${version.commons.logging}</version>
     </dependency>
 
     <dependency>
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
-      <version>2.3.1</version>
+      <version>${version.jaxb.api}</version>
       <scope>test</scope>
     </dependency>
 
@@ -151,7 +157,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier</artifactId>
-      <version>3.1.13</version>
+      <version>${version.equalsverifier}</version>
       <scope>test</scope>
     </dependency>
 
@@ -170,7 +176,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>${version.maven.surefire.plugin}</version>
           <configuration>
             <redirectTestOutputToFile>true</redirectTestOutputToFile>
           </configuration>
@@ -183,6 +189,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.maven.compiler.plugin}</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${version.maven.shade.plugin}</version>
       </plugin>
 
       <plugin>
@@ -215,16 +227,10 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
+        <version>${version.coveralls.plugin}</version>
         <configuration>
           <jacocoReports>${project.basedir}/target/site/jacoco/jacoco.xml</jacocoReports>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>${version.maven.shade.plugin}</version>
       </plugin>
     </plugins>
   </build>
