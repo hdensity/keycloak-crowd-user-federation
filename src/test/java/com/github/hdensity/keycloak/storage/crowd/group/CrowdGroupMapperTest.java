@@ -20,13 +20,13 @@
  * SOFTWARE.
  */
 
-package it.schmit.keycloak.storage.crowd.group;
+package com.github.hdensity.keycloak.storage.crowd.group;
 
 import com.atlassian.crowd.exception.*;
 import com.atlassian.crowd.model.group.Group;
 import com.atlassian.crowd.model.group.GroupWithAttributes;
 import com.atlassian.crowd.service.client.CrowdClient;
-import it.schmit.keycloak.storage.crowd.CrowdUserAdapter;
+import com.github.hdensity.keycloak.storage.crowd.CrowdUserAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
