@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.hdensity.keycloak.storage.crowd.group;
+package it.schmit.keycloak.storage.crowd.group;
 
 import com.atlassian.crowd.exception.ApplicationPermissionException;
 import com.atlassian.crowd.exception.GroupNotFoundException;
@@ -29,8 +29,8 @@ import com.atlassian.crowd.exception.OperationFailedException;
 import com.atlassian.crowd.exception.UserNotFoundException;
 import com.atlassian.crowd.model.group.GroupWithAttributes;
 import com.atlassian.crowd.service.client.CrowdClient;
-import com.github.hdensity.keycloak.storage.crowd.CrowdStorageProvider;
-import com.github.hdensity.keycloak.storage.crowd.CrowdUserAdapter;
+import it.schmit.keycloak.storage.crowd.CrowdStorageProvider;
+import it.schmit.keycloak.storage.crowd.CrowdUserAdapter;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.GroupModel;
