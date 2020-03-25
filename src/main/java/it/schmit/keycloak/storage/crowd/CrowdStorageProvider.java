@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.hdensity.keycloak.storage.crowd;
+package it.schmit.keycloak.storage.crowd;
 
 import com.atlassian.crowd.embedded.api.SearchRestriction;
 import com.atlassian.crowd.exception.ApplicationPermissionException;
@@ -36,7 +36,7 @@ import com.atlassian.crowd.search.query.entity.restriction.MatchMode;
 import com.atlassian.crowd.search.query.entity.restriction.PropertyImpl;
 import com.atlassian.crowd.search.query.entity.restriction.TermRestriction;
 import com.atlassian.crowd.service.client.CrowdClient;
-import com.github.hdensity.keycloak.storage.crowd.group.CrowdGroupMapper;
+import it.schmit.keycloak.storage.crowd.group.CrowdGroupMapper;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;

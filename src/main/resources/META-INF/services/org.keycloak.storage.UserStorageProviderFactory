@@ -1,1 +1,1 @@
-com.github.hdensity.keycloak.storage.crowd.CrowdStorageProviderFactory
+it.schmit.keycloak.storage.crowd.CrowdStorageProviderFactory
