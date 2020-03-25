@@ -78,7 +78,11 @@ public class CrowdStorageProvider implements
 
     private static final Logger logger = Logger.getLogger(CrowdStorageProvider.class);
 
-    protected static final TermRestriction<String> NOOP_SEARCH_RESTRICTION =
+    /**
+     * A Crowd search restriction matching everything, used in cases where an unrestricted Keycloak method is mapped
+     * to a search in Crowd.
+     */
+    protected static final SearchRestriction NOOP_SEARCH_RESTRICTION =
             new TermRestriction<>(new PropertyImpl<>("name", String.class), MatchMode.CONTAINS, "");
 
     private static final Map<String, String> PARAM_MAP;
@@ -109,6 +113,13 @@ public class CrowdStorageProvider implements
 
     // UserLookupProvider methods
 
+    /**
+     * Retrieves a user by its username.
+     *
+     * @param username The username of the user to retrieve
+     * @param realm The realm from which to retrieve the user.
+     * @return The user with the given username, if found, null otherwise
+     */
     @Override
     public UserModel getUserByUsername(String username, RealmModel realm) {
         try {
@@ -121,11 +132,25 @@ public class CrowdStorageProvider implements
         }
     }
 
+    /**
+     * Retrieves a user by its id.
+     *
+     * @param id The id of the user to retrieve
+     * @param realm The realm from which to retrieve the user.
+     * @return The user with the given id, if found, null otherwise
+     */
     @Override
     public UserModel getUserById(String id, RealmModel realm) {
         return getUserByUsername(StorageId.externalId(id), realm);
     }
 
+    /**
+     * Retrieves a user by its email address.
+     *
+     * @param email The email address of the user to retrieve
+     * @param realm The realm from which to retrieve the user.
+     * @return The user with the given email address, if found, null otherwise
+     */
     @Override
     public UserModel getUserByEmail(String email, RealmModel realm) {
         Map<String, String> params = new HashMap<>();
@@ -136,6 +161,12 @@ public class CrowdStorageProvider implements
 
     // UserQueryProvider methods
 
+    /**
+     * Returns the number of users, without considering any service account.
+     *
+     * @param realm the realm
+     * @return the number of users
+     */
     @Override
     public int getUsersCount(RealmModel realm) {
         try {
@@ -146,21 +177,51 @@ public class CrowdStorageProvider implements
         }
     }
 
+    /**
+     * Retrieves all users of the given realm.
+     *
+     * @param realm the realm for which to retrieve users
+     * @return the list of users of this realm
+     */
     @Override
     public List<UserModel> getUsers(RealmModel realm) {
         return getUsers(realm, 0, Integer.MAX_VALUE);
     }
 
+    /**
+     * Retrieves a maximum of {@code maxResult} users of the given realm, starting at index {@code firstResult}.
+     *
+     * @param realm the realm for which to retrieve users
+     * @param firstResult the index of the first user to retrieve
+     * @param maxResults the number of users to retrieve
+     * @return a list of users
+     */
     @Override
     public List<UserModel> getUsers(RealmModel realm, int firstResult, int maxResults) {
         return searchForUser("", realm, firstResult, maxResults);
     }
 
+    /**
+     * Search for users with username, email or first + last name that is like search string.
+     *
+     * @param search the search string to use
+     * @param realm the realm in which to search for users
+     * @return the list of users matching the given search string
+     */
     @Override
     public List<UserModel> searchForUser(String search, RealmModel realm) {
         return searchForUser(search, realm, 0, Integer.MAX_VALUE);
     }
 
+    /**
+     * Search for users with username, email or first + last name that is like search string.
+     *
+     * @param search the search string to use
+     * @param realm the realm in which to search for users
+     * @param firstResult the index of the first user to retrieve
+     * @param maxResults the number of users to retrieve
+     * @return the list of users matching the given search string
+     */
     @Override
     public List<UserModel> searchForUser(String search, RealmModel realm, int firstResult, int maxResults) {
         Map<String, String> params = new HashMap<>();
@@ -172,11 +233,39 @@ public class CrowdStorageProvider implements
         return searchForUser(params, realm, firstResult, maxResults);
     }
 
+    /**
+     * Search for user by parameter. Valid parameters are:
+     * <ul>
+     * <li>"first" - first name</li>
+     * <li>"last" - last name</li>
+     * <li>"email" - email</li>
+     * <li>"username" - username</li>
+     * </ul>
+     *
+     * @param params the parameters to match against
+     * @param realm the realm in which to search for users
+     * @return the list of users matching the given parameters
+     */
     @Override
     public List<UserModel> searchForUser(Map<String, String> params, RealmModel realm) {
         return searchForUser(params, realm, 0, Integer.MAX_VALUE);
     }
 
+    /**
+     * Search for user by parameter. Valid parameters are:
+     * <ul>
+     * <li>"first" - first name</li>
+     * <li>"last" - last name</li>
+     * <li>"email" - email</li>
+     * <li>"username" - username</li>
+     * </ul>
+     *
+     * @param params the parameters to match against
+     * @param realm the realm in which to search for users
+     * @param firstResult the index of the first user to retrieve
+     * @param maxResults the number of users to retrieve
+     * @return the list of users matching the given parameters
+     */
     @Override
     public List<UserModel> searchForUser(
             Map<String, String> params, RealmModel realm, int firstResult, int maxResults) {
@@ -206,6 +295,14 @@ public class CrowdStorageProvider implements
         }
     }
 
+    /**
+     * Search for users that have a specific attribute with a specific value.
+     *
+     * @param attrName the attribute name to search for
+     * @param attrValue the attribute value to search for
+     * @param realm the realm in which to search for users
+     * @return the list of users matching the given attribute and attribute value
+     */
     @Override
     public List<UserModel> searchForUserByUserAttribute(String attrName, String attrValue, RealmModel realm) {
         Map<String, String> params = new HashMap<>();
@@ -214,11 +311,27 @@ public class CrowdStorageProvider implements
         return searchForUser(params, realm, 0, Integer.MAX_VALUE);
     }
 
+    /**
+     * Get users that belong to a specific group.
+     *
+     * @param realm the realm in which to search for users
+     * @param group the group for which to retrieve users
+     * @return the list of users of the given group
+     */
     @Override
     public List<UserModel> getGroupMembers(RealmModel realm, GroupModel group) {
         return getGroupMembers(realm, group, 0, Integer.MAX_VALUE);
     }
 
+    /**
+     * Get users that belong to a specific group.
+     *
+     * @param realm the realm in which to search for users
+     * @param group the group for which to retrieve users
+     * @param firstResult the index of the first user to retrieve
+     * @param maxResults the number of users to retrieve
+     * @return the list of users of the given group
+     */
     @Override
     public List<UserModel> getGroupMembers(RealmModel realm, GroupModel group, int firstResult, int maxResults) {
         try {
@@ -235,16 +348,38 @@ public class CrowdStorageProvider implements
 
     // CredentialInputValidator methods
 
+    /**
+     * Checks whether the provider is configured for the specified credential type.
+     *
+     * @param realm the realm to check for
+     * @param user the user to check for
+     * @param credentialType the credential type to check for
+     * @return true if the provider is configured for the specified credential type, false otherwise
+     */
     @Override
     public boolean isConfiguredFor(RealmModel realm, UserModel user, String credentialType) {
         return supportsCredentialType(credentialType);
     }
 
+    /**
+     * Checks whether the provider supports the given credential type.
+     *
+     * @param credentialType the credential type to check.
+     * @return true, if the given credential type is {@code PasswordCredentialModel.TYPE}, false otherwise.
+     */
     @Override
     public boolean supportsCredentialType(String credentialType) {
         return credentialType.equals(PasswordCredentialModel.TYPE);
     }
 
+    /**
+     * Tests whether a credential is valid.
+     *
+     * @param realm The realm in which to which the credential belongs to
+     * @param user The user for which to test the credential
+     * @param input the credential details to verify
+     * @return true if the passed secret is correct
+     */
     @Override
     public boolean isValid(RealmModel realm, UserModel user, CredentialInput input) {
         if (!supportsCredentialType(input.getType())) {
@@ -263,6 +398,9 @@ public class CrowdStorageProvider implements
 
     // Provider method implementations
 
+    /**
+     * Close the provider and free up resources.
+     */
     @Override
     public void close() {
         // no-op
