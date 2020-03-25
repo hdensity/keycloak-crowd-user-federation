@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.hdensity.keycloak.storage.crowd;
+package it.schmit.keycloak.storage.crowd;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

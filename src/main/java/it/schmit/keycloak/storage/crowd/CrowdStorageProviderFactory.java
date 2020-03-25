@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.github.hdensity.keycloak.storage.crowd;
+package it.schmit.keycloak.storage.crowd;
 
 import com.atlassian.crowd.integration.rest.service.factory.RestCrowdClientFactory;
 import com.atlassian.crowd.service.client.CrowdClient;
