@@ -1,5 +1,52 @@
 language: java
+
 sudo: false
+
+cache:
+  directories:
+    - "$HOME/.m2"
+
+services:
+  - docker
+
 jdk:
   - openjdk8
-script: mvn clean package coveralls:report
+
+before_install:
+  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+
+install:
+  - mvn --settings .travis/maven.xml -Prelease install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+
+script:
+  - mvn --settings .travis/maven.xml -Prelease clean deploy coveralls:report
+
+after_success:
+  - docker build -t samschmit/keycloak-crowd .
+
+before_deploy:
+  - export PROJECT_VERSION=$(mvn help:evaluate -N -Dexpression=project.version | grep -v '\[')
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: W6oPaE6biziOBXAT9gN04bIiXxkcbJoLaaQv+kTf0ztt2eU38jdA45d6obcPD7UmQv34/2mdWepcMBUY3wF178hNC0TEn72H6b8QbhAy5YnE26mX9I1J7AkF7DHmf+zVdgynNGWFUDLKVv3GTca68mRvyX3v5eX8+H7oBDOoCADaXQXBSNiWMjDIjjBdBAMD4tGu27oMuS1Y7G1D9ECEBHC9866GkEtkeGU88Qu8isG9KVbVKpeG+0uN1kN3HojiNLpFrEKXLg5KZI21jCVf9J5ctA4joUITgqfdpgAYSvbfcf8ul+zcBSQiPoHyZsQyJV8b3bol83/0o0ZtxcSnS76r3Y01LudBh1IwBjwSRlhKiK+2UozbGYdsVhpwB2dgi0Nth3Yh0IR/Qhsc88QW6WB/THVwfHG2rEWnUd/C1H2R+Q40sA4oSHoTKPHGCSO9cD6UCYNqN3S3U9Yfh5AyufHq8BcmxcQ40baabKFJ9mJRsk9LoAt6U5Mmm33TPWGIv22G6LOyTtGIVkX+iUlhD8gO4VFI+uT7d2WoELWcgN8cohfWn/BcAeSpf4aF7sA22BnKuVmqRRN3vzv5QfMhBnI2Hdh2jY9d5B0DxeHbT3EoPNhd+UvD/8pe2dyahPEl3jqoaNmARL2gQG941PN3QdymF4OEgdcGrEpajiV+mGM=
+    file_glob: true
+    file:
+      - target/*.pom
+      - target/*.pom.asc
+      - target/*.jar
+      - target/*.jar.asc
+    overwrite: true
+    skip_cleanup: true
+    on:
+      repo: hdensity/keycloak-crowd-user-federation
+    name: $PROJECT_VERSION
+  - provider: script
+    script: bash .travis/docker_push.sh
+    skip_cleanup: true
+    on:
+      repo: hdensity/keycloak-crowd-user-federation
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^(release/)
