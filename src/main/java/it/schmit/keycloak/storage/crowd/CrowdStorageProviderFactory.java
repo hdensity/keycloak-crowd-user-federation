@@ -75,16 +75,34 @@ public class CrowdStorageProviderFactory implements UserStorageProviderFactory<C
                 .build();
     }
 
+    /**
+     * Returns the name of this provider ("crowd").
+     *
+     * @return the id of the provider ("crowd")
+     */
     @Override
     public String getId() {
         return PROVIDER_NAME;
     }
 
+    /**
+     * Returns the configuration properties of this provider.
+     *
+     * @return the configuration properties of this provider
+     */
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
         return configMetadata;
     }
 
+    /**
+     * Validates a given configuration for required parameters.
+     *
+     * @param session the keycloak session
+     * @param realm the keycloak realm
+     * @param config the config to validate
+     * @throws ComponentValidationException thrown if the given config is invalid
+     */
     @Override
     public void validateConfiguration(KeycloakSession session, RealmModel realm, ComponentModel config)
             throws ComponentValidationException {
@@ -104,6 +122,13 @@ public class CrowdStorageProviderFactory implements UserStorageProviderFactory<C
         }
     }
 
+    /**
+     * Creates a new instance of the {@link CrowdStorageProvider}.
+     *
+     * @param session the keycloak session
+     * @param model the keycloak component model
+     * @return a new isntance of the provider
+     */
     @Override
     public CrowdStorageProvider create(KeycloakSession session, ComponentModel model) {
         CrowdClient client = new RestCrowdClientFactory().newInstance(
