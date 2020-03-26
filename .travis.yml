@@ -22,11 +22,8 @@ install:
 script:
   - mvn --settings .travis/maven.xml -Prelease clean deploy coveralls:report
 
-after_success:
-  - docker build -t samschmit/keycloak-crowd .
-
 before_deploy:
-  - export PROJECT_VERSION=$(mvn help:evaluate -N -Dexpression=project.version | grep -v '\[')
+  - export PROJECT_VERSION=$(mvn help:evaluate -N -Dexpression=project.version -q -DforceStdout)
 
 deploy:
   - provider: releases
