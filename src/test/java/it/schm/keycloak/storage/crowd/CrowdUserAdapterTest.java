@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package it.schmit.keycloak.storage.crowd;
+package it.schm.keycloak.storage.crowd;
 
 import com.atlassian.crowd.model.user.UserWithAttributes;
 import org.junit.jupiter.api.BeforeEach;

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package it.schmit.keycloak.storage.crowd;
+package it.schm.keycloak.storage.crowd;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

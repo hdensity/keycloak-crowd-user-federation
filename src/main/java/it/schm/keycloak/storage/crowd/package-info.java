@@ -21,9 +21,9 @@
  */
 
 /**
- * Crowd group mapper and model.
+ * Keycloak Crowd User Federation storage provider and factory.
  *
  * @author Sam Schmit
  * @since 1.0.0
  */
-package it.schmit.keycloak.storage.crowd.group;
+package it.schm.keycloak.storage.crowd;
