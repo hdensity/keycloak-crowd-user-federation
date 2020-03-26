@@ -34,6 +34,8 @@ login_to_docker
 current_major_version=$(echo "$PROJECT_VERSION" | cut -d "." -f1)
 current_major_minor_version=$(echo "$PROJECT_VERSION" | cut -d "." -f1-2)
 
+docker build -t samschmit/keycloak-crowd .
+
 tag_and_push "$current_major_minor_version"
 conditionally_tag_and_push "$current_major_version.*" "$current_major_minor_version" "$current_major_version"
 conditionally_tag_and_push "*" "$current_major_minor_version" "latest"
