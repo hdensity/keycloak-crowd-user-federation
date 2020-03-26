@@ -3,6 +3,7 @@
 function exit_on_snapshot() {
   snapshot=$(echo "$PROJECT_VERSION" | cut -d "-" -f2)
   if [ "$snapshot" == "SNAPSHOT" ]; then
+    echo Skipping pushing SNAPSHOT build
     exit 0;
   fi
 }
