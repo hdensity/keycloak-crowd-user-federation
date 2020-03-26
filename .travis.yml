@@ -39,6 +39,7 @@ deploy:
     skip_cleanup: true
     on:
       repo: hdensity/keycloak-crowd-user-federation
+      all_branches: true
     name: $PROJECT_VERSION
   - provider: script
     script: bash .travis/docker_push.sh
