@@ -21,7 +21,7 @@ install:
   - mvn --settings .travis/maven.xml -Prelease install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 script:
-  - mvn --settings .travis/maven.xml -Prelease clean deploy coveralls:report
+  - mvn --settings .travis/maven.xml -Prelease clean deploy
 
 deploy:
   - provider: releases
