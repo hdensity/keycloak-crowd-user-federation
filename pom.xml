@@ -4,7 +4,7 @@
 
   <groupId>it.schm.keycloak</groupId>
   <artifactId>crowd-user-storage</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <name>Keycloak Crowd User Federation</name>
