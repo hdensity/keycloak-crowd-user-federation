@@ -262,15 +262,6 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.eluder.coveralls</groupId>
-            <artifactId>coveralls-maven-plugin</artifactId>
-            <version>${version.coveralls.plugin}</version>
-            <configuration>
-              <jacocoReports>${project.basedir}/target/site/jacoco/jacoco.xml</jacocoReports>
-            </configuration>
-          </plugin>
-
-          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
             <version>${version.maven.source.plugin}</version>
@@ -314,6 +305,24 @@
                     <exclude>original-*.jar</exclude>
                   </excludes>
                 </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.eluder.coveralls</groupId>
+            <artifactId>coveralls-maven-plugin</artifactId>
+            <version>${version.coveralls.plugin}</version>
+            <configuration>
+              <jacocoReports>${project.basedir}/target/site/jacoco/jacoco.xml</jacocoReports>
+            </configuration>
+            <executions>
+              <execution>
+                <id>report-coverall</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
               </execution>
             </executions>
           </plugin>
