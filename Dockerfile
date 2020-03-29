@@ -1,3 +1,5 @@
 FROM jboss/keycloak
 
-COPY target/*[0-9].jar /opt/jboss/keycloak/standalone/deployments/
+ARG VERSION
+
+COPY target/*$VERSION.jar /opt/jboss/keycloak/standalone/deployments/

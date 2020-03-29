@@ -45,4 +45,3 @@ deploy:
     on:
       repo: hdensity/keycloak-crowd-user-federation
       all_branches: true
-      tags: true
