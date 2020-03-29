@@ -38,11 +38,9 @@ deploy:
     on:
       repo: hdensity/keycloak-crowd-user-federation
       all_branches: true
-      tags: true
   - provider: script
     script: bash .travis/docker_push.sh
     skip_cleanup: true
     on:
       repo: hdensity/keycloak-crowd-user-federation
       all_branches: true
-      tags: true

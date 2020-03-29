@@ -11,6 +11,9 @@ function conditionally_tag_and_push() {
   local tag=$3
 
   latest=$(git branch --list -r "origin/release/$pattern" | cut -d "/" -f3 | sort -r | head -n 1)
+
+  echo "pattern: $pattern, version: $version, tag: $tag, latest: $latest"
+
   if [ "$version" == "$latest" ]; then
     tag_and_push "$tag"
   fi
