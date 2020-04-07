@@ -4,7 +4,7 @@
 
   <groupId>it.schm.keycloak</groupId>
   <artifactId>crowd-user-storage</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9</version>
   <packaging>jar</packaging>
 
   <name>Keycloak Crowd User Federation</name>
@@ -32,6 +32,11 @@
     <developerConnection>scm:git:ssh://github.com:hdensity/keycloak-crowd-user-federation.git</developerConnection>
     <url>http://github.com/hdensity/keycloak-crowd-user-federation/tree/master</url>
   </scm>
+
+  <issueManagement>
+    <url>https://github.com/hdensity/keycloak-crowd-user-federation/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
 
   <distributionManagement>
     <snapshotRepository>
