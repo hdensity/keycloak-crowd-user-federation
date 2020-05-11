@@ -1,3 +1,5 @@
-FROM jboss/keycloak
+FROM jboss/keycloak:9.0.2
 
-COPY target/*[0-9].jar /opt/jboss/keycloak/standalone/deployments/
+ARG VERSION
+
+COPY target/crowd-user-storage-*$VERSION.jar /opt/jboss/keycloak/standalone/deployments/

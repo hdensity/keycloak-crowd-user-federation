@@ -33,6 +33,11 @@
     <url>http://github.com/hdensity/keycloak-crowd-user-federation/tree/master</url>
   </scm>
 
+  <issueManagement>
+    <url>https://github.com/hdensity/keycloak-crowd-user-federation/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
@@ -59,15 +64,15 @@
 
     <jacoco.reportPath>${project.basedir}/target/jacoco/jacoco.exec</jacoco.reportPath>
 
-    <version.keycloak>9.0.2</version.keycloak>
+    <version.keycloak>10.0.1</version.keycloak>
     <version.jboss.logging>3.4.1.Final</version.jboss.logging>
     <version.crowd.client>4.0.1</version.crowd.client>
     <version.commons.logging>1.2</version.commons.logging>
     <version.jaxb.api>2.3.1</version.jaxb.api>
 
-    <version.junit>5.6.0</version.junit>
-    <version.mockito>3.3.0</version.mockito>
-    <version.assertj>3.15.0</version.assertj>
+    <version.junit>5.6.2</version.junit>
+    <version.mockito>3.3.3</version.mockito>
+    <version.assertj>3.16.0</version.assertj>
     <version.equalsverifier>3.1.13</version.equalsverifier>
 
     <version.jacoco>0.8.5</version.jacoco>
@@ -77,7 +82,7 @@
     <version.maven.source.plugin>3.2.1</version.maven.source.plugin>
     <version.maven.javadoc.plugin>3.2.0</version.maven.javadoc.plugin>
     <version.maven.gpg.plugin>1.6</version.maven.gpg.plugin>
-    <version.maven.shade.plugin>3.2.2</version.maven.shade.plugin>
+    <version.maven.shade.plugin>3.2.3</version.maven.shade.plugin>
     <version.coveralls.plugin>4.3.0</version.coveralls.plugin>
     <version.nexus.plugin>1.6.8</version.nexus.plugin>
   </properties>
