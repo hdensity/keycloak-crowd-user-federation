@@ -28,15 +28,12 @@ import org.keycloak.component.ComponentModel;
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.storage.ReadOnlyException;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A read-only UserModel implementation for Crowd's UserWithAttributes.
@@ -54,6 +51,7 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     private final String keycloakId;
     private final UserWithAttributes entity;
+    private final Map<String, String> attributes;
 
     private Set<GroupModel> groups;
 
@@ -71,6 +69,13 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
         this.keycloakId = StorageId.keycloakId(model, entity.getName());
         this.entity = entity;
+
+        attributes = new HashMap<>(5);
+        attributes.put(ATTR_DISPLAY_NAME, entity.getDisplayName());
+        attributes.put(CachedUserModel.FIRST_NAME, entity.getFirstName());
+        attributes.put(CachedUserModel.LAST_NAME, entity.getLastName());
+        attributes.put(CachedUserModel.USERNAME, entity.getName());
+        attributes.put(CachedUserModel.EMAIL, entity.getEmailAddress());
     }
 
     @Override
@@ -144,11 +149,8 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     @Override
     public List<String> getAttribute(String name) {
-        if (ATTR_DISPLAY_NAME.equals(name)) {
-            List<String> strings = new ArrayList<>();
-            strings.add(entity.getDisplayName());
-
-            return strings;
+        if (attributes.containsKey(name)) {
+            return Collections.singletonList(attributes.get(name));
         }
 
         if (entity.getKeys().contains(name)) {
@@ -166,10 +168,9 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
 
     @Override
     public String getFirstAttribute(String name) {
-        if (ATTR_DISPLAY_NAME.equals(name)) {
-            return entity.getDisplayName();
+        if (attributes.containsKey(name)) {
+            return attributes.get(name);
         }
-
         return entity.getValue(name);
     }
 
@@ -181,7 +182,10 @@ public class CrowdUserAdapter extends AbstractUserAdapterFederatedStorage {
     @Override
     public Map<String, List<String>> getAttributes() {
         MultivaluedHashMap<String, String> all = new MultivaluedHashMap<>();
-        all.putSingle(ATTR_DISPLAY_NAME, entity.getDisplayName());
+
+        attributes.entrySet().stream()
+                .filter(e -> e.getValue() != null)
+                .forEach(e -> all.put(e.getKey(), Collections.singletonList(e.getValue())));
 
         entity.getKeys().stream()
                 .filter(key -> entity.getValues(key) != null)

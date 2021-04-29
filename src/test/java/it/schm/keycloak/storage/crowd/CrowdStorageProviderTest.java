@@ -48,6 +48,7 @@ import org.keycloak.models.ModelException;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.models.credential.OTPCredentialModel;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.mockito.Mock;
@@ -413,7 +414,7 @@ class CrowdStorageProviderTest {
         when(clientMock.authenticateUser(USERNAME, "password")).thenReturn(expectedUser);
 
         UserModel userMock = mock(UserModel.class);
-        when(userMock.getUsername()).thenReturn(USERNAME);
+        when(userMock.getFirstAttribute(CachedUserModel.USERNAME)).thenReturn(USERNAME);
 
         assertThat(crowdStorageProvider.isValid(realmModelMock, userMock, input)).isEqualTo(expectedResult);
     }
@@ -440,7 +441,7 @@ class CrowdStorageProviderTest {
         when(clientMock.authenticateUser(USERNAME, "password")).thenThrow(exception);
 
         UserModel userMock = mock(UserModel.class);
-        when(userMock.getUsername()).thenReturn(USERNAME);
+        when(userMock.getFirstAttribute(CachedUserModel.USERNAME)).thenReturn(USERNAME);
 
         assertThat(crowdStorageProvider.isValid(realmModelMock, userMock, input)).isFalse();
     }
@@ -467,7 +468,7 @@ class CrowdStorageProviderTest {
         when(clientMock.authenticateUser(USERNAME, "password")).thenThrow(exception);
 
         UserModel userMock = mock(UserModel.class);
-        when(userMock.getUsername()).thenReturn(USERNAME);
+        when(userMock.getFirstAttribute(CachedUserModel.USERNAME)).thenReturn(USERNAME);
 
         assertThatThrownBy(() -> crowdStorageProvider.isValid(realmModelMock, userMock, input))
                 .isExactlyInstanceOf(ModelException.class)
