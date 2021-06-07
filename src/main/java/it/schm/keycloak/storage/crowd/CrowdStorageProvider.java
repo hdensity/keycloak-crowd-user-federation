@@ -46,6 +46,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ModelException;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.UserStorageProvider;
@@ -94,9 +95,9 @@ public class CrowdStorageProvider implements
         PARAM_MAP.put("username", "name");
     }
 
-    private KeycloakSession session;
-    private CrowdClient client;
-    private ComponentModel model;
+    private final KeycloakSession session;
+    private final CrowdClient client;
+    private final ComponentModel model;
 
     /**
      * Creates a new instance of this provider.
@@ -387,7 +388,7 @@ public class CrowdStorageProvider implements
         }
 
         try {
-            return client.authenticateUser(user.getUsername(), input.getChallengeResponse()) != null;
+            return client.authenticateUser(user.getFirstAttribute(CachedUserModel.USERNAME), input.getChallengeResponse()) != null;
         } catch (InactiveAccountException | UserNotFoundException | ExpiredCredentialException e) {
             return false;
         } catch (ApplicationPermissionException | InvalidAuthenticationException | OperationFailedException e) {

@@ -30,15 +30,13 @@ import org.keycloak.component.ComponentModel;
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.cache.CachedUserModel;
 import org.keycloak.storage.ReadOnlyException;
 import org.keycloak.storage.StorageId;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -58,11 +56,13 @@ class CrowdUserAdapterTest {
     private static final String USER_EMAIL = "email@address.here";
     private static final String USER_FIRST_NAME = "first name";
     private static final String USER_LAST_NAME = "last name";
+    private static final String USER_DISPLAY_NAME = "display name";
 
     @BeforeEach
     void setupGroupAdapter() {
         when(modelMock.getId()).thenReturn(MODEL_ID);
         when(userMock.getName()).thenReturn(USER_NAME);
+        when(userMock.getDisplayName()).thenReturn(USER_DISPLAY_NAME);
 
         crowdUserAdapter = new CrowdUserAdapter(sessionMock, realmMock, modelMock, userMock);
     }
@@ -153,10 +153,7 @@ class CrowdUserAdapterTest {
 
     @Test
     void given_displayName_when_getAttribute_then_expectedValueIsReturned() {
-        String displayName = "display name";
-        when(userMock.getDisplayName()).thenReturn(displayName);
-
-        assertThat(crowdUserAdapter.getAttribute(CrowdUserAdapter.ATTR_DISPLAY_NAME)).contains(displayName);
+        assertThat(crowdUserAdapter.getAttribute(CrowdUserAdapter.ATTR_DISPLAY_NAME)).contains(USER_DISPLAY_NAME);
     }
 
     @Test
@@ -200,10 +197,7 @@ class CrowdUserAdapterTest {
 
     @Test
     void given_displayName_when_getFirstAttribute_then_expectedValueIsReturned() {
-        String displayName = "display name";
-        when(userMock.getDisplayName()).thenReturn(displayName);
-
-        assertThat(crowdUserAdapter.getFirstAttribute(CrowdUserAdapter.ATTR_DISPLAY_NAME)).isEqualTo(displayName);
+        assertThat(crowdUserAdapter.getFirstAttribute(CrowdUserAdapter.ATTR_DISPLAY_NAME)).isEqualTo(USER_DISPLAY_NAME);
     }
 
     @Test
@@ -226,9 +220,6 @@ class CrowdUserAdapterTest {
 
     @Test
     void when_getAttributes_then_expectedValuesAreReturned() {
-        String displayName = "display name";
-        when(userMock.getDisplayName()).thenReturn(displayName);
-
         Set<String> keys = new HashSet<>();
         keys.add("attr");
         keys.add("null attr");
@@ -240,11 +231,9 @@ class CrowdUserAdapterTest {
         when(userMock.getValues("attr")).thenReturn(values);
         when(userMock.getValues("null attr")).thenReturn(null);
 
-        List<String> displayNameValue = new ArrayList<>();
-        displayNameValue.add(displayName);
-
         assertThat(crowdUserAdapter.getAttributes()).containsOnly(
-                entry(CrowdUserAdapter.ATTR_DISPLAY_NAME, displayNameValue),
+                entry(CrowdUserAdapter.ATTR_DISPLAY_NAME, Collections.singletonList(USER_DISPLAY_NAME)),
+                entry(CachedUserModel.USERNAME, Collections.singletonList(USER_NAME)),
                 entry("attr", new ArrayList<>(values)));
     }
 
