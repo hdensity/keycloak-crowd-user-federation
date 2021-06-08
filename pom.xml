@@ -64,7 +64,7 @@
 
     <jacoco.reportPath>${project.basedir}/target/jacoco/jacoco.exec</jacoco.reportPath>
 
-    <version.keycloak>10.0.1</version.keycloak>
+    <version.keycloak>13.0.0</version.keycloak>
     <version.jboss.logging>3.4.1.Final</version.jboss.logging>
     <version.crowd.client>4.0.1</version.crowd.client>
     <version.commons.logging>1.2</version.commons.logging>
